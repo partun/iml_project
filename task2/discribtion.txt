@@ -1,0 +1,19 @@
+At first we tried to predict all label with a single network but we found it was hard to improve because the different subtasks use different metrics and face different difficulties. So we decided to split the labels into three groups that each get their own model. These correspond to the three subtasks form the project description.
+
+The Preprocessor loads the training and test data and performs data processing.
+    processing of features
+    1. interpolate data
+        Since we started in working on this task we found it logical to fill missing vales by interpolation. We assumed it would be sufficient to use simple piecewise interpolation. Null values at the start and the end of a column we replaced by the value of its nearest neighbor.
+    2. selection
+        We had the idea of completely removing patient data that contains more then t null columns but we found that it did not have a significate effect in our score.
+    3. impute data
+        We use the SimpleImputer from sklearn to replace nan values with the mean for that column.
+    4. normalize data 
+        As the last step we use the sklearn StandardScaler to normalize the data to have 0 mean and unit variance.
+
+    processing of labels
+    1. split into label_tests, label_sepsis, label_vitals
+    2. selection according to 2. before
+
+
+At first we tried to use a neural network using only dense layers. This a decent score but we could improve our score by switching to a 1D convolutional neural network. The convolutional layers makes it easier for the model to learn the time dependence of the different timestamps. We use crossvalidation to determine the other mode parameter. The main problem of predicting sepsis was that only a few patients experience sepsis, which makes the dataset very imbalanced. We tried to improve the prediction by duplicating the positive data point. By crossvalidation we found the best tradeoff between havening a imbalanced dataset and overfitting caused by the duplicated data points.
