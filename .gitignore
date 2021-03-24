@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+task1a/task1main.py
+task1b/main_old.py
+task4/data/food/*
+
+.vscode
+*.zip
