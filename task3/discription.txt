@@ -1,0 +1,14 @@
+Packages:
+    - numpy
+    - pandas
+    - Tensorflow
+    - keras
+
+Our first approach was to use a random forest classifier with four inputs one for each possible position. We encoded the each type of aminoacid to a unique integers. This approach gave us a decent first result but we struggled to improve the model further. So we divided to use a neural network instead. We also suspected that is not a good idea to encode the aminoacids as different integer in the same input as this implies an order between the aminoacids. So we changed the representation of the features. We convert the character sequence into a 4x26 boolean matrix. The rows correspond to the 4 possible aminoacid position. The column correspond to the type of aminoacid, aminoacid A gets mapped to column 0, aminoacid B gets mapped to column 1 and so on.
+
+We build our network to do binary classification between active or inactive. We used tensorflow keras to build our model. First we need to flatten the input features with a flatten layer. After that we we added multiple dense layer and a dropout layer to delay overfitting. At the end we have top layer with a single node a output.
+Tensorflow keras does not provide a build in metric for the f1 score so we a the f1 custom metric found here (https://stackoverflow.com/questions/43547402/how-to-calculate-f1-macro-in-keras).
+
+We used early stopping form tensorflow keras to monitor the validation f1 score of our model. If it does not see a validation score improvement after 10 epochs it stops the model and restores the weights with the best validation f1 score. After trail and error we settled on the current model parameter
+At the end of our program we can use the neural network we trained before to predict the labels of the test features. The test features have been converted in the same way as the train features.
+The prediction output a range of real values between 0 and infinity but the task descriptions demands predictions of 0 or 1. So we map values in [0,0.5) to 0 and values in [0.5,infinity] to 1.
